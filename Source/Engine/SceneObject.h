@@ -1,7 +1,9 @@
 #pragma once
 #include <Math/kGeometry.hpp>
+#include <KTL/DynArray.hpp>
+#include <KTL/SharedPtr.hpp>
 #include "Camera.h"
-#include <unordered_map>
+//#include <unordered_map>
 
 namespace physx {
   class PxRigidBody;
@@ -24,8 +26,8 @@ namespace k3d {
 	class SObject
 	{
 	public:
-		typedef std::shared_ptr<SObject>             SObjPtr;
-		typedef std::vector<SObjPtr>                  SOVector;
+		typedef SharedPtr<SObject>             SObjPtr;
+		typedef DynArray<SObjPtr>                  SOVector;
 		typedef SOVector::iterator                    SOVIter;
 
 		SObject() = default;

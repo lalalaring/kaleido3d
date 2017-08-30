@@ -25,7 +25,7 @@ namespace k3d
 		m_ParameterName = { paramName };
 	}
 
-	std::string & ShaderParameter::GetName()
+    String & ShaderParameter::GetName()
 	{
 		return m_ParameterName;
 	}

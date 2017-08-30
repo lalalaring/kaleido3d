@@ -1,4 +1,4 @@
-#include "Kaleido3D.h"
+#include "CoreMinimal.h"
 #include "InputDeviceImpl.h"
 //#include <android/input.h>
 
@@ -22,12 +22,10 @@ namespace k3d
 			return Mouse::Vector2i();
 		}
 
-
 		void setMousePosition(const Mouse::Vector2i& position)
 		{
 
 		}
-
 
 		void setMousePosition(const Mouse::Vector2i& position, const IWindow& relativeTo)
 		{

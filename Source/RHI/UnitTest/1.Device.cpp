@@ -1,7 +1,7 @@
-#include <Kaleido3D.h>
+#include <Core/Kaleido3D.h>
 #include <Core/App.h>
 #include <Core/Message.h>
-#include <Interface/IRHI.h>
+#include <Core/Interface/IRHI.h>
 #include <Core/Module.h>
 #include <RHI/Vulkan/Public/IVkRHI.h>
 #include <RHI/Metal/Public/IMetalRHI.h>

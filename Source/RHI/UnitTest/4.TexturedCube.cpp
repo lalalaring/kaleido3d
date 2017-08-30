@@ -4,13 +4,11 @@
 #include <Core/AssetManager.h>
 #include <Core/LogUtil.h>
 #include <Core/Message.h>
-#include <Kaleido3D.h>
-#include <Math/kMath.hpp>
-#include <Renderer/Render.h>
+#include <Core/Kaleido3D.h>
+#include <Core/Math/kMath.hpp>
 //#include <steam/steam_api.h>
 
 using namespace k3d;
-using namespace render;
 using namespace kMath;
 
 class CubeMesh;

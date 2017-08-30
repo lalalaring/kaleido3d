@@ -1,6 +1,6 @@
 file(GLOB VKRHI_SRC_LIST "*.cpp" "*.h")
 include_directories(
-../.. ../../../Include
+../..
 .
 )
 
@@ -17,8 +17,8 @@ set(RHI_HEADERS
 )
 
 set(NGFX_HEADERS
-	../../../Include/Interface/IRHI.h
-	../../../Include/Interface/NGFX.h
+	../../Core/Interface/IRHI.h
+	../../Core/Interface/NGFX.h
 )
 
 set(RHI_IMPL_SRCS
@@ -57,7 +57,7 @@ source_group(
 add_plugin(RHI_Vulkan 
 	FOLDER "Runtime/RHI" 
 	SRCS ${VKRHI_SRC_LIST} ${RHI_HEADERS} ${RHI_IMPL_SRCS} ${NGFX_HEADERS} 
-	LIBS RHIUtil ShaderCompiler ${VULKAN_LIB})
+	LIBS RHIUtil ShaderCompiler ${VULKAN_LIBRARIES})
 
 if(NOT ANDROID)
 	add_precompiled_header(RHI_Vulkan "VkCommon.h" "${Kaleido3D_ROOT_DIR}/Source/RHI/Vulkan" "${Kaleido3D_ROOT_DIR}/Source/RHI/Vulkan/Private/VkRHI.cpp")

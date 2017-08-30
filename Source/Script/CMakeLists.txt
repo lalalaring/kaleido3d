@@ -15,11 +15,11 @@ add_library(V8Script ${LIB_TYPE}
 
 target_link_libraries(
 V8Script
-Core
+Kaleido3D.Core
 RHI_Vulkan
-RHI_D3D12
+ngfx_vulkan
 ${V8_LIBRARIES}
 )
 
-add_precompiled_header(V8Script "Kaleido3D.h" "${Kaleido3D_ROOT_DIR}/Include" "${Kaleido3D_ROOT_DIR}/Source/Script/V8Binding.cpp")
+#add_precompiled_header(V8Script "Kaleido3D.h" "${Kaleido3D_ROOT_DIR}/Include" "${Kaleido3D_ROOT_DIR}/Source/Script/V8Binding.cpp")
 set_target_properties(V8Script PROPERTIES FOLDER "Runtime/Plugins")

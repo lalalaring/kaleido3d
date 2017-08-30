@@ -5,7 +5,7 @@
 
 namespace Dispatch {
 
-WorkQueue::WorkQueue(k3d::String const& name, ::Os::ThreadPriority priority)
+WorkQueue::WorkQueue(k3d::String const& name, ::Os::ThreadPriority priority) K3D_NOEXCEPT
   : ::Os::Thread(
       [this]() {
         while (m_Started) {

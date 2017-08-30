@@ -7,7 +7,7 @@ namespace Dispatch
 
 	class WorkItem {
 	public:
-		WorkItem();
+		WorkItem() K3D_NOEXCEPT;
 		virtual ~WorkItem();
 		virtual void OnExec();
 		void RemoveFromQueue();
@@ -27,7 +27,7 @@ namespace Dispatch
 	class TWorkItem : public WorkItem {
 	public:
 		template <class U>
-		TWorkItem(U && fun) {
+		TWorkItem(U && fun) K3D_NOEXCEPT {
 			m_Fun = fun;
 		}
 

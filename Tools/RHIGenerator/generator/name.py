@@ -1,5 +1,8 @@
 import re
 
+re_param = re.compile('(Nullable|NotNull)*\s*(const)*\s*(?P<name>[\w\s]*\w)', re.I)
+re_array = re.compile('(?P<name>.*)\[\d+\]', re.I)
+
 def make_name_AxxBxx(name):
     parts = name.split(' ')
     mp = []

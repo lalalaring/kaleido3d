@@ -1,7 +1,7 @@
 #ifndef __RHIUtil_h__
 #define __RHIUtil_h__
 
-#include <Interface/IRHI.h>
+#include <Core/Interface/IRHI.h>
 #include <map>
 
 K3D_COMMON_NS
@@ -30,11 +30,11 @@ K3D_COMMON_NS
     uint32 ColorAttachmentsKey;
   };
 
-  uint64 K3D_API HashTextureDesc(NGFXResourceDesc const& Desc);
+  uint64 K3D_CORE_API HashTextureDesc(NGFXResourceDesc const& Desc);
   // Hash renderpass for compat usage
-  uint64 K3D_API HashRenderPassDesc(NGFXRenderPassDesc const& Desc);
+  uint64 K3D_CORE_API HashRenderPassDesc(NGFXRenderPassDesc const& Desc);
   // For Vulkan Framebuffer Cache
-  uint64 K3D_API HashAttachments(NGFXRenderPassDesc const& Desc);
+  uint64 K3D_CORE_API HashAttachments(NGFXRenderPassDesc const& Desc);
 
   typedef std::map<k3d::PipelineLayoutKey, NGFXPipelineLayoutRef>
     MapPipelineLayout;

@@ -1,11 +1,10 @@
 #ifndef __AndroidWindow_h__
 #define __AndroidWindow_h__
-
-#include <Kaleido3D.h>
-#include <Core/Window.h>
-#include <Core/LogUtil.h>
+#include "CoreMinimal.h"
+#include <XPlatform/Window.h>
+//#include <Core/LogUtil.h>
 #include <queue>
-#include <Core/App.h>
+#include <XPlatform/App.h>
 
 namespace k3d
 {
@@ -21,7 +20,7 @@ namespace k3d
 
         ~AndroidWindow() {}
 
-        void SetWindowCaption(const kchar * name) override
+        void SetWindowCaption(const char * name) override
         {
 
         }
@@ -61,14 +60,14 @@ namespace k3d
             return true;
         }
 
-        uint32 Width() const override
+        U32 Width() const override
         {
-            return (uint32)ANativeWindow_getWidth(m_pWindow);
+            return (U32)ANativeWindow_getWidth(m_pWindow);
         }
 
-        uint32 Height() const override
+        U32 Height() const override
         {
-            return (uint32)ANativeWindow_getHeight(m_pWindow);
+            return (U32)ANativeWindow_getHeight(m_pWindow);
         }
 
     private:
@@ -76,14 +75,14 @@ namespace k3d
         ANativeWindow *     m_pWindow;
     };
 
-    IWindow::Ptr MakePlatformWindow(const kchar *windowName, int width, int height)
+    IWindow::Ptr MakePlatformWindow(const char *windowName, int width, int height)
     {
         return nullptr;
     }
 
     IWindow::Ptr MakeAndroidWindow(void* window)
     {
-        KLOG(Info, kaleido3d::App, "[MakeAndroidWindow] file:%s line:%d", __FILE__, __LINE__);
+        //KLOG(Info, kaleido3d::App, "[MakeAndroidWindow] file:%s line:%d", __FILE__, __LINE__);
         return IWindow::Ptr(new AndroidWindow( (ANativeWindow*) window ));
     }
 }

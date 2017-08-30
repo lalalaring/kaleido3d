@@ -1,4 +1,5 @@
 set(UT_LINK_LIBS Kaleido3D.Core Kaleido3D.Render)
+unset(PLATFORM_LIBS)
 set(UT_DEP_PLUGIN "")
 
 set(DEVELOPMENT_TEAM "8HY898Y2MS")
@@ -67,14 +68,18 @@ if(ANDROID)
     list(APPEND UT_LINK_LIBS RHI_Vulkan ShaderCompiler)
 elseif(WIN32)
     list(APPEND UT_LINK_LIBS RHI_Vulkan winmm comctl32)
+    list(APPEND PLATFORM_LIBS winmm comctl32)
     if(BUILD_WITH_D3D12)
         list(UT_LINK_LIBS RHI_D3D12 ${DXSDK_LIBRARIES})
     endif()
 elseif(MACOS)
     list(APPEND UT_LINK_LIBS "-framework AppKit" RHI_Metal)
+    list(APPEND PLATFORM_LIBS "-framework AppKit")
 elseif(IOS)
-    list(APPEND UT_LINK_LIBS "-framework UIKit" RHI_Metal)
+    list(APPEND PLATFORM_LIBS "-framework UIKit")
     set(PLIST_GEN ${Kaleido3D_ROOT_DIR}/Project/plist_gen)
+elseif(UNIX)
+#    list(APPEND UT_LINK_LIBS dl X11)
 endif()
 
 if(BUILD_SHARED)
@@ -99,7 +104,7 @@ function(add_ios_framework TARGET)
         set(${TARGET}_PDN "${TARGET}")
     endif()
     execute_process(COMMAND ${PLIST_GEN} -t "framework" --be "${TARGET}" 
-            --bid "${${TARGET}_ID}" --cr "\"Copyright 2016 Tsin Studio\"" 
+            --bid "${${TARGET}_ID}" --cr "\"Copyright 2018 Tsin Studio\"" 
             --bn "${${TARGET}_ID}" --bdn "${${TARGET}_PDN}" 
             --outdir "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir") ## generate Info.plist
     set_target_properties(${TARGET} PROPERTIES
@@ -131,7 +136,16 @@ function(k3d_add_lib TARGET)
             add_ios_framework(Kaleido3D.${TARGET} SRCS ${${TARGET}_SRCS} LIBS ${${TARGET}_LIBS})
         else()
             add_library(Kaleido3D.${TARGET} SHARED ${${TARGET}_SRCS})
+            if(LINUX)
+                target_link_libraries(Kaleido3D.${TARGET} rt dl X11)
+            endif()
             target_link_libraries(Kaleido3D.${TARGET} ${${TARGET}_LIBS})
+            if(MACOS)
+                add_custom_command(TARGET Kaleido3D.${TARGET} POST_BUILD COMMAND
+                    ${CMAKE_INSTALL_NAME_TOOL} -id 
+                    "@loader_path/../Frameworks/libKaleido3D.${TARGET}.dylib" 
+                    $<TARGET_FILE:Kaleido3D.${TARGET}>)
+            endif()
         endif(IOS)
     else()
         add_library(Kaleido3D.${TARGET} STATIC ${${TARGET}_SRCS})
@@ -157,6 +171,11 @@ function(add_plugin PLUGIN_NAME)
             add_ios_framework(${PLUGIN_NAME} SRCS ${${PLUGIN_NAME}_SRCS} LIBS Kaleido3D.Core ${${PLUGIN_NAME}_LIBS})
         else()
             add_library(${PLUGIN_NAME} ${LIB_TYPE} ${${PLUGIN_NAME}_SRCS})
+            if(UNIX)
+                target_compile_options(${PLUGIN_NAME} PRIVATE -fPIC)
+                set_target_properties(${PLUGIN_NAME} PROPERTIES
+                        LIBRARY_OUTPUT_DIRECTORY ${Kaleido3D_ROOT_DIR}/Binary/)
+            endif()
             target_link_libraries(${PLUGIN_NAME} Kaleido3D.Core ${${PLUGIN_NAME}_LIBS})
         endif(IOS)
     else()
@@ -178,19 +197,19 @@ if(MACOS)
             if(${TARGET}_LIBS)
                 target_link_libraries(${TARGET} ${${TARGET}_LIBS})
                 set(${TARGET}_FRAMEWORK_DIR "$<TARGET_FILE_DIR:${TARGET}>/../../Contents/Frameworks")
-                foreach(DEPEND_LIB IN LISTS ${TARGET}_LIBS)
+#foreach(DEPEND_LIB IN LISTS ${TARGET}_LIBS)
                     # Copy Dependency Libraries To XX.app/Contents/Frameworks
-                    add_custom_command(TARGET ${TARGET} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E
-                                    copy "$<TARGET_FILE:${DEPEND_LIB}>" "${${TARGET}_FRAMEWORK_DIR}/lib${DEPEND_LIB}.dylib")
-                endforeach()
+#                    add_custom_command(TARGET ${TARGET} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E
+#                                    copy "$<TARGET_FILE:${DEPEND_LIB}>" "${${TARGET}_FRAMEWORK_DIR}/lib${DEPEND_LIB}.dylib")
+#                endforeach()
             endif()
             if(${TARGET}_PLUGINS)
                 set(${TARGET}_PLUGIN_DIR "$<TARGET_FILE_DIR:${TARGET}>/../PlugIns")
-                foreach(PLUGIN IN LISTS ${TARGET}_PLUGINS)
-                    set(${PLUGIN}_INSTALL_DIR "${${TARGET}_PLUGIN_DIR}/lib${PLUGIN}.dylib")
-                    add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
-                            copy "$<TARGET_FILE:${PLUGIN}>" "${${PLUGIN}_INSTALL_DIR}")
-                endforeach()
+#foreach(PLUGIN IN LISTS ${TARGET}_PLUGINS)
+#                    set(${PLUGIN}_INSTALL_DIR "${${TARGET}_PLUGIN_DIR}/lib${PLUGIN}.dylib")
+#                    add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E
+#                            copy "$<TARGET_FILE:${PLUGIN}>" "${${PLUGIN}_INSTALL_DIR}")
+#               endforeach()
             endif()
         else(BUILD_SHARED) # Static Build
             list(APPEND ${TARGET}_LINK_LIBS ${${TARGET}_LIBS})
@@ -260,10 +279,10 @@ endif(ANDROID)
 macro(add_unittest EXAMPLE_NAME)
     if(ANDROID)
         add_android_app(${EXAMPLE_NAME}
-            SRCS ${ARGN} ${Kaleido3D_SOURCE_DIR}/Platform/Android/jni/RendererView.cpp ${Kaleido3D_SOURCE_DIR}/Source/Platform/Android/jni/RendererView_JNI.cpp
+            SRCS ${ARGN} ${Kaleido3D_SOURCE_DIR}/Source/Platform/Android/jni/RendererView.cpp ${Kaleido3D_SOURCE_DIR}/Source/Platform/Android/jni/RendererView_JNI.cpp
             LIBS ${UT_LINK_LIBS})
     elseif(WIN32)
-        add_executable(${EXAMPLE_NAME} ${ARGN} ${Kaleido3D_SOURCE_DIR}/Source/Platform/Windows/win32icon.rc)
+        add_executable(${EXAMPLE_NAME} ${ARGN} ${Kaleido3D_SOURCE_DIR}/Source/Platform/Microsoft/Win32/win32icon.rc)
         target_link_libraries(${EXAMPLE_NAME} ${UT_LINK_LIBS})
         set_target_properties(${EXAMPLE_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
     elseif(MACOS)
@@ -278,8 +297,34 @@ macro(add_unittest EXAMPLE_NAME)
             PDN ${EXAMPLE_NAME}
             OS 8.0
             LDPATH "@executable_path")
+    elseif(UNIX)
+        add_executable(${EXAMPLE_NAME} ${ARGN})
+        target_link_libraries(${EXAMPLE_NAME} ${UT_LINK_LIBS})
     else()
         add_executable(${EXAMPLE_NAME} ${ARGN})
     endif()
     set_target_properties(${EXAMPLE_NAME} PROPERTIES FOLDER "Unit Test")
 endmacro()
+
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
+    set(API_EXPORTS "__attribute__((visibility(\"default\")))")
+    set(API_IMPORTS " ")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    set(API_EXPORTS "__declspec(dllexport)")
+    set(API_IMPORTS "__declspec(dllimport)")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Apple")
+    set(API_EXPORTS "__attribute__((visibility(\"default\")))")
+    set(API_IMPORTS " ")
+endif()
+
+
+function(add_lib_api TARGET LIB_TYPE)
+    string(TOUPPER "${TARGET}_API" ${TARGET}_API)
+    if("SHARED" STREQUAL "${LIB_TYPE}")
+        target_compile_definitions(${TARGET} PRIVATE "${${TARGET}_API}=${API_EXPORTS}")
+        #target_compile_definitions(${TARGET} PUBLIC "${${TARGET}_API}=${API_IMPORTS}")
+    else()
+        target_compile_definitions(${TARGET} PUBLIC "${TARGET}_API= ")
+    endif()
+endfunction()

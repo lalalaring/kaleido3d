@@ -7,7 +7,7 @@ set(COMPILER_SRCS
     Private/GLSLangUtils.h Private/GLSLangUtils.cc
     Private/SPIRVCrossUtils.h Private/SPIRVCrossUtils.cc
     Private/MetalCompiler.cc Private/MetalCompiler.h
-	../../Include/Interface/ShaderCommon.h
+	../Core/Interface/ShaderCommon.h
 )
 
 source_group("Compiler\\Private" FILES ${COMPILER_SRCS})
@@ -17,7 +17,7 @@ source_group("Compiler\\Public" FILES ${PUB_SRCS})
 add_plugin(ShaderCompiler 
 	FOLDER "Runtime/Tools"
 	SRCS ${COMPILER_SRCS} ${PUB_SRCS}
-    LIBS ${GLSLANG_LIBRARIES} ${SPIRV2CROSS_LIBRARY})
+    LIBS ${GLSLANG_LIBRARIES} ${SPIRVCROSS_LIBRARIES})
 
 if(MACOS AND BUILD_SHARED)
     add_custom_command(TARGET ShaderCompiler POST_BUILD COMMAND
@@ -28,3 +28,7 @@ install(TARGETS ShaderCompiler
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin)
+    
+if(BUILD_WITH_UNIT_TEST)
+    add_subdirectory(UnitTest)
+endif()

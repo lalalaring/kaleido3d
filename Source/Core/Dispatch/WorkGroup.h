@@ -11,15 +11,13 @@ namespace Dispatch
 
 	class WorkGroup {
 	public:
-		WorkGroup();
-		~WorkGroup();
+		WorkGroup() K3D_NOEXCEPT;
+		~WorkGroup() K3D_NOEXCEPT;
 		bool IsEmpty();
 		WorkGroup& Add(WorkItem* item);
 
 	private:
 		friend class ::Dispatch::WorkQueue;
-
 		vector<WorkItem*> m_ItemContainer;
-		
 	};
 }

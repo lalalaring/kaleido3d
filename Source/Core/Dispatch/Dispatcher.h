@@ -4,7 +4,7 @@
 #include "WorkQueue.h"
 #include "Kaleido3D.h"
 
-class K3D_API Dispatcher {
+class K3D_CORE_API Dispatcher {
 public:
 	using Queue = ::Dispatch::WorkQueue;
 	using Item = ::Dispatch::WorkItem;

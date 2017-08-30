@@ -4,7 +4,7 @@
 
 namespace Dispatch
 {
-	WorkGroup::WorkGroup()
+	WorkGroup::WorkGroup() K3D_NOEXCEPT
 	{
 	}
 	WorkGroup::~WorkGroup()

@@ -7,7 +7,7 @@ NS_K3D_D3D12_BEGIN
 // Test create d3d12 device from feature level 12.1 - 11.0
 extern D3D_FEATURE_LEVEL TestCreateDevice(IUnknown* comObj, Microsoft::WRL::ComPtr<ID3D12Device> & device);
 
-class K3D_API Helper
+class K3D_CORE_API Helper
 {
 public:
 	static void	ConvertVertexFormatToInputElementDesc(

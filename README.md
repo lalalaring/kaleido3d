@@ -3,106 +3,39 @@ Introduction
 
 **kaleido3d** is a cross-platform graphics library.
 
-> **Main Feature**
-> 
->* `Next Generation Graphics Library` 
->* Modern C++ Code
->* Modern Graphics Renderer (`Metal`, `Vulkan`, `Direct3D 12`, `OpenGL|ES`)
->* **`Maya`** Digital Content Creation Tools
->* **Task-Oriented**, support `multi-thread` rendering 
->* Support Windows, Android, iOS, MacOS & Linux.
+>* Next-Gen Graphics API Agnostic Layer (NGFX) for `Metal`, `Vulkan`, `DX12`
+>* Provide a Physically Based Renderer
+>* Multi-Threaded Rendering 
+>* Use GLTF as Internal Mesh Format
+>* Cross platform, Support Windows/UWP, Android, iOS, MacOS & Linux
+>* Offline Rendering Support via `Compute Shader`
+>* Experimental Real Time Ray-tracing Support
+>* Provide a cross-platform Build System (Xbuild), even build ios targets on Windows
+>* Provide iOS/Android Profiling Toolchain (Cross platform)
+>* Real-time Device Viewport for Preview
 
 ----------
 
 Prerequisites
 =========
 
-
-| | Windows | Android | MacOS/iOS |
-|:---:|:---:|:---:|:---:|
-|CI Status|[![Build status](https://ci.appveyor.com/api/projects/status/bkqv6wbtyr4538hf?svg=true)](https://ci.appveyor.com/project/TsinStudio/kaleido3d)|[![Circle CI](https://circleci.com/gh/TsinStudio/kaleido3d.svg?style=svg)](https://circleci.com/gh/TsinStudio/kaleido3d) |[![Build Status](https://travis-ci.org/TsinStudio/kaleido3d.svg?branch=master)](https://travis-ci.org/TsinStudio/kaleido3d)|
-|IDE| VS2015+ | Android Studio 2.2+| Xcode 8.1+ |
-|OS Requirements| Win10 | Android 7.+| MacOS Sierra |
-|Dependency| [ThirdParty](https://github.com/Tomicyo/kaleido3d_dep)/CMake 3.4+ | [ThirdParty](https://github.com/Tomicyo/kaleido3d_dep)/NDK r12+/Gradle | [ThirdParty](https://github.com/Tomicyo/kaleido3d_dep)/CMake 3.4+ |
-
-----------
-
-Build Instructions
-=========
-
->* **Windows**: make.bat
->* **Mac OS X**: ./make_macos.sh
->* **Android**: (./)gradlew build
+* Python 2.7
+* CMake 3.x
+* Visual Studio 2017
+* iOS Build Environment
+* NDK 14+
+* Xcode 7+
 
 ---
 
-Current Status
-========
+Wiki
+=====
 
-- RHI(Render Hardware Interface)
-
-	* [x] Vulkan backend **ready**.
-	* [x] DirectX 12 backend **WIP**
-	* [x] Metal backend **WIP**
-
-- Core.Platform
-
-	* [x] Windows implementation ready.
-	* [x] Android RendererView.
-	* [x] iOS/MacOS **WIP**.
-
-- Tools
-	
-	* [x] HLSL ShaderCompiler (D3DCompiler & GLSLANG)
-	* [x] Maya exporter.
-
-- Planned Samples
-	
-	* [x] Triangle
-	* [x] Textured Cube
-	* [x] Compute Shader
-	* [ ] Physically Based Shading (Material Model)
-	* [ ] Skinned Skeleton Animation
-	* [ ] Shadow Mapping (Render To Texture, Z-Pass)
-	* [ ] Deferred Shading (Multi-RenderTarget)
-	* [ ] Tile-Based Cluster Lighting (Compute Shading)
-	* [x] Multi-Thread Rendering (WIP)
-	* [ ] Multi-GPU/CrossAdapter Rendering
-	* [x] Cross Shader Language Compiler
-	* [ ] Hand-writing Recognition CNN Sample (GPGPU)
+[See Wikis](https://github.com/DsoTsin/kaleido3d/wiki)
 
 ---
 
-Current Architecture
-=========
-
-![arch](Document/architect_current.png)
-
----
-
-Documents
-=========
-
-* [**Include**](Include/ReadMe.md): common definitions & template library
-* [**Source.Core**](Source/Core/README.md) 
-* [**Source.RHI**](Source/RHI/README.md): Implementation Include **Vulkan**, **Direct3D 12** And **Metal** API
-* [**Source.Render**](Source/Renderer/README.md)
-* [**Source.Tools.ShaderCompiler**](Source/Tools/ShaderGen/README.md) : cross shader language compiler and translator.
-* **Source.Tools.MayaDcc** : maya plugin for engine assets exportation.
-* **Source.UnitTest**: unit tests of engine modules
-* [**ThirdParty**][8]
-	*  [rapidJson][3]
-	*  [glslang][7]
-	*  [spir2cross][10]
-	*  [freetype][11]
-	*  dxsdk
-	*  steamworks
-
-> Note: This project is under MIT License.
-	
-----------
-
-RHI Snippets
+NGFX Snippets
 =======
 
 > **Draw a triangle**
@@ -145,7 +78,7 @@ void DrawFrame()
 
 ---
 
-Samples
+Unit Tests
 =======
 
 ## 1.Triangle(Basic)
@@ -168,14 +101,37 @@ Contact
 If you have any suggestion, please contact me via [**email**][12] . 
 
 
+---
+
 Discuss [![Join the chat at https://gitter.im/TsinStudio/kaleido3d](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TsinStudio/kaleido3d?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 =========
-
-
 
 Please join the [gitter chat](https://gitter.im/TsinStudio/kaleido3d) or [QQ Group][13] to discuss on this project.
 Framework development discussions and thorough bug reports are collected on [Issues](https://github.com/TsinStudio/kaleido3d/issues).
 
+---
+
+
+Credits
+=====
+
+**ThirdParty Libraries:**
+
+* OpenSSL (Core)
+* PCRE2 (Core)
+* Snappy (Core)
+* ZLib (Core)
+* Vulkan Memory Allocator (NGFX)
+* FreeType (ShaderCompiler)
+* Glslang (ShaderCompiler)
+* SPIRV-CROSS (ShaderCompiler)
+* SPIRV-TOOLS (ShaderCompiler)
+* LLVM (Reflection)
+* Clang (Reflection)
+* GoogleV8 (Script)
+* GoogleTest (Unit Test)
+* rapidjson
+* imobiledevice (MobileDevice)
 
 
 [1]: http://www.cmake.org

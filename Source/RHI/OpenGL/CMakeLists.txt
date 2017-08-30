@@ -1,6 +1,5 @@
 file(GLOB OGLRHI_SRC_LIST "*.cpp" "*.h")
 include_directories(
-../.. ../../../Include
 .
 )
 

@@ -1,0 +1,79 @@
+solution("kaleido3d") {
+    cproj("kCore") {
+        type = "shared_lib"
+        srcs = [ 
+            "Source/Core/Base/**.h",
+            "Source/Core/Base/*.cpp",
+            "Source/Core/Base/Memory/*.cpp",
+            "Source/Core/Math/**.h",
+            "Source/Core/Math/**.cpp",
+            "Source/Core/Net/**.h",
+            "Source/Core/Net/**.cpp",
+            "Source/Core/XPlatform/**.h",
+            "Source/Core/XPlatform/**.cpp"
+        ]
+        match(${target_os}) {
+            "windows" => { 
+                defines = ["K3DPLATFORM_OS_WIN=1","K3D_USE_SSE=1", "LIB_BUILD=1", "BUILD_SHARED_LIB=1"] 
+                srcs += "Source/Platform/Microsoft/Win32/**.cpp"
+            }
+            "android" => {
+                defines = ["K3DPLATFORM_OS_ANDROID=1", "K3D_USE_NEON=1", "LIB_BUILD=1", "BUILD_SHARED_LIB=1"] 
+                srcs += "Source/Platform/Android/cpp/**.cpp"
+            }
+            "ios" => {
+                defines = ["K3DPLATFORM_OS_IOS=1", "K3D_USE_NEON=1", "LIB_BUILD=1", "BUILD_SHARED_LIB=1"] 
+                srcs += "Source/Platform/Apple/iOS/**.mm"
+                srcs += "Source/Platform/Apple/CpuUsage.mm"
+            }
+            "macos" => {
+                defines = ["K3DPLATFORM_OS_MAC=1", "K3D_USE_SSE=1", "LIB_BUILD=1", "BUILD_SHARED_LIB=1"] 
+                srcs += "Source/Platform/Apple/MacOS/**.cpp"
+                srcs += "Source/Platform/Apple/CpuUsage.mm"
+            }
+            "linux" => {
+                defines = ["K3DPLATFORM_OS_LINUX=1", "K3D_USE_SSE=1", "LIB_BUILD=1", "BUILD_SHARED_LIB=1"] 
+                srcs += "Source/Platform/Linux/**.cpp"
+            }
+        }
+        srcs = list_files(srcs)
+        inc_dirs = [ "Source/Core" ]
+        on_init = () {
+            url = "https://ci.appveyor.com/api/buildjobs/0sbdu14sljjf8s1p/artifacts/build%2Fthird_party_clibs_windows_static.zip"
+            download_and_extract(url, ".build/third_party")
+            log = execute("python --version")
+            
+            echo("alabing ${target_os} ${target_config}")
+        }
+    }
+    cproj("kNGFX") {
+        type = "shared_lib"
+        srcs = [
+            "Source/NGFX/Public/**.h",
+            "Source/NGFX/Private/ShaderLab/**.cpp",
+            "Source/NGFX/Private/ShaderFormats/**.cpp",
+            "Source/NGFX/Private/ShaderCompiler/**.cpp"
+        ]
+        match($target_os) {
+            "windows" => {
+                srcs += "Source/NGFX/Private/Vulkan/vulkan.cpp"
+            }
+            "ios" => {
+
+            }
+            "macos" => {
+
+            }
+            "linux" => {
+                srcs += "Source/NGFX/Private/Vulkan/vulkan.cpp"
+            }
+            "android" => {
+                srcs += "Source/NGFX/Private/Vulkan/vulkan.cpp"
+            }
+        }
+        srcs = list_files(srcs)
+        private = {
+            inc_dirs = ["Source/NGFX/Public"]
+        }
+    }
+}

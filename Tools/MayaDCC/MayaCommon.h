@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Kaleido3D.h>
+#include <Core/Kaleido3D.h>
 #include <Core/Os.h>
 
 #include <maya/MMatrix.h>

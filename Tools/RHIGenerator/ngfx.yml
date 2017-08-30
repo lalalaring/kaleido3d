@@ -8,6 +8,18 @@ protype:
             - Failed
             - Param Error
             - Device Not Found
+            
+    - backend:
+        type: enum
+        comment: graphics backend type
+        enums:
+            - Vulkan
+            - Metal
+            - D3D 11
+            - D3D 12
+            - D3D 12 SM6
+            - OpenGL Core
+            - OpenGL ES 3
 
     - pipeline type:
         type: enum
@@ -52,23 +64,32 @@ protype:
 
     - load action:
         type: enum
+        direct_mapping: false
         vulkan: VkAttachmentLoadOp
+        metal: MTLLoadAction
         enums:
           - load:
                 vulkan: VK_ATTACHMENT_LOAD_OP_LOAD
+                metal: MTLLoadActionLoad
           - clear:
                 vulkan: VK_ATTACHMENT_LOAD_OP_DONT_CARE
+                metal: MTLLoadActionDontCare
           - dont care:
                 vulkan: VK_ATTACHMENT_LOAD_OP_CLEAR
+                metal: MTLLoadActionClear
 
     - store action:
         type: enum
+        direct_mapping: true
         vulkan: VkAttachmentStoreOp
+        metal: MTLStoreAction
         enums:
           - store:
                 vulkan: VK_ATTACHMENT_STORE_OP_STORE
+                metal: MTLStoreActionStore
           - dont care:
                 vulkan: VK_ATTACHMENT_STORE_OP_DONT_CARE
+                metal: MTLStoreActionDontCare
 
     - vertex format:
         type: enum
@@ -78,8 +99,15 @@ protype:
             - F32C3
             - F32C4
 
+    - index buffer type:
+        type: enum
+        enums:
+            - U16
+            - U32
+
     - stencil face ref:
         type: enum
+        direct_mapping: true
         enums:
             - front
             - back
@@ -87,81 +115,149 @@ protype:
 
     - primitive type:
         type: enum
+        direct_mapping: true
         vulkan: VkPrimitiveTopology
+        metal: MTLPrimitiveType
         enums: 
             - Points:
                 vulkan: VK_PRIMITIVE_TOPOLOGY_POINT_LIST
+                metal: MTLPrimitiveTypePoint
             - Lines:
                 vulkan: VK_PRIMITIVE_TOPOLOGY_LINE_LIST
+                metal: MTLPrimitiveTypeLine
+            - Line Strip:
+                vulkan: VK_PRIMITIVE_TOPOLOGY_LINE_STRIP
+                metal: MTLPrimitiveTypeLineStrip
             - Triangles:
                 vulkan: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST
+                metal: MTLPrimitiveTypeTriangle
             - TriangleStrips:
                 vulkan: VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP
+                metal: MTLPrimitiveTypeTriangleStrip
 
     - blend operation:
         type: enum
+        direct_mapping: true
         vulkan: VkBlendOp
+        metal: MTLBlendOperation
         enums:
             - Add:
                 vulkan: VK_BLEND_OP_ADD
+                metal: MTLBlendOperationAdd
             - Sub:
                 vulkan: VK_BLEND_OP_SUBTRACT
+                metal: MTLBlendOperationSubtract
+            - Reverse Substract:
+                vulkan: VK_BLEND_OP_REVERSE_SUBTRACT
+                metal: MTLBlendOperationReverseSubtract
+            - Min:
+                vulkan: VK_BLEND_OP_MIN
+                metal: MTLBlendOperationMin
+            - Max:
+                vulkan: VK_BLEND_OP_MAX
+                metal: MTLBlendOperationMax
 
-    - blend type:
+    - blend factor:
         type: enum
+        direct_mapping: false
         comment: Color blending
         vulkan: VkBlendFactor
+        metal: MTLBlendFactor
         enums:
             - Zero:
                 vulkan: VK_BLEND_FACTOR_ZERO
+                metal: MTLBlendFactorZero
             - One:
                 vulkan: VK_BLEND_FACTOR_ONE
+                metal: MTLBlendFactorOne
             - Src Color:
                 vulkan: VK_BLEND_FACTOR_SRC_COLOR
-            - Dst Color:
-                vulkan: VK_BLEND_FACTOR_DST_COLOR
+                metal: MTLBlendFactorSourceColor
+            - One Minus Src Color:
+                vulkan: VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR
+                metal: MTLBlendFactorOneMinusSourceColor
             - Src Alpha:
                 vulkan: VK_BLEND_FACTOR_SRC_ALPHA
+                metal: MTLBlendFactorSourceAlpha 
+            - One Minus Src Alpha:
+                vulkan: VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
+                metal: MTLBlendFactorOneMinusSourceAlpha 
+            - Dst Color:
+                vulkan: VK_BLEND_FACTOR_DST_COLOR
+                metal: MTLBlendFactorDestinationColor 
+            - One Minus Dst Color:
+                vulkan: VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR
+                metal: MTLBlendFactorOneMinusDestinationColor 
             - Dst Alpha:
                 vulkan: VK_BLEND_FACTOR_DST_ALPHA
+                metal: MTLBlendFactorDestinationAlpha
+            - One Minus Dst Alpha:
+                vulkan: VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA
+                metal: MTLBlendFactorOneMinusDestinationAlpha 
 
     - stencil operation:
         type: enum
+        comment: Stencil Operations
+        direct_mapping: true
         vulkan: VkStencilOp
+        metal: MTLStencilOperation
         enums:
             - Keep:
                 vulkan: VK_STENCIL_OP_KEEP
+                metal: MTLStencilOperationKeep
             - Zero:
                 vulkan: VK_STENCIL_OP_ZERO
+                metal: MTLStencilOperationZero
             - Replace:
                 vulkan: VK_STENCIL_OP_REPLACE
+                metal: MTLStencilOperationReplace
+            - Increment Clamp:
+                vulkan: VK_STENCIL_OP_INCREMENT_AND_CLAMP
+                metal: MTLStencilOperationIncrementClamp
+            - Decrement Clamp:
+                vulkan: VK_STENCIL_OP_DECREMENT_AND_CLAMP
+                metal: MTLStencilOperationDecrementClamp
             - Invert:
                 vulkan: VK_STENCIL_OP_INVERT
-            - Increment:
-                vulkan: VK_STENCIL_OP_INCREMENT_AND_CLAMP
-            - Decrement:
-                vulkan: VK_STENCIL_OP_DECREMENT_AND_CLAMP
+                metal: MTLStencilOperationInvert
+            - Increment Wrap:
+                vulkan: VK_STENCIL_OP_INCREMENT_AND_WRAP
+                metal: MTLStencilOperationIncrementWrap
+            - Decrement Wrap:
+                vulkan: VK_STENCIL_OP_DECREMENT_AND_WRAP
+                metal: MTLStencilOperationDecrementWrap
 
     - comparison function:
         type: enum
+        comment: Depth Comparison Functions
+        direct_mapping: true
         vulkan: VkCompareOp
+        metal: MTLCompareFunction
         enums:
             - Never:
                 vulkan: VK_COMPARE_OP_NEVER
+                metal: MTLCompareFunctionNever
             - Less:
                 vulkan: VK_COMPARE_OP_LESS
+                metal: MTLCompareFunctionLess
             - Equal:
                 vulkan: VK_COMPARE_OP_EQUAL
+                metal: MTLCompareFunctionEqual
             - Less Equal:
                 vulkan: VK_COMPARE_OP_LESS_OR_EQUAL
+                metal: MTLCompareFunctionLessEqual
             - Greater:
                 vulkan: VK_COMPARE_OP_GREATER
+                metal: MTLCompareFunctionGreater
             - Not Equal:
                 vulkan: VK_COMPARE_OP_NOT_EQUAL
+                metal: MTLCompareFunctionNotEqual
             - Greater Equal:
                 vulkan: VK_COMPARE_OP_GREATER_OR_EQUAL
+                metal: MTLCompareFunctionGreaterEqual
             - Always:
                 vulkan: VK_COMPARE_OP_ALWAYS
+                metal: MTLCompareFunctionAlways
     
     - depth stencil op:
         type: struct
@@ -174,6 +270,12 @@ protype:
               type: stencil operation
             - name: stencilFunc
               type: comparison function
+            - name: compareMask
+              type: uint32_t
+            - name: writeMask
+              type: uint32_t
+            - name: reference
+              type: uint32_t
 
     - depth write mask:
         type: enum
@@ -250,29 +352,41 @@ protype:
                 vulkan: VK_IMAGE_VIEW_TYPE_3D_ARRAY
             - TexCube:
                 vulkan: VK_IMAGE_VIEW_TYPE_CUBE
+            - Buffer:
+                vulkan: VK_IMAGE_VIEW_TYPE_1D
 
     - fill mode:
         type: enum
+        direct_mapping: true
         vulkan: VkPolygonMode
+        metal: MTLTriangleFillMode
         enums:
             - Wire:
                 vulkan: VK_POLYGON_MODE_LINE
+                metal: MTLTriangleFillModeFill
             - Solid:
                 vulkan: VK_POLYGON_MODE_FILL
+                metal: MTLTriangleFillModeLines
 
     - cull mode:
         type: enum
+        direct_mapping: true
         vulkan: VkCullModeFlagBits
+        metal: MTLCullMode
         enums:
             - None:
                 vulkan: VK_CULL_MODE_NONE
+                metal: MTLCullModeNone
             - Front:
                 vulkan: VK_CULL_MODE_FRONT_BIT
+                metal: MTLCullModeFront
             - Back:
                 vulkan: VK_CULL_MODE_BACK_BIT
+                metal: MTLCullModeBack
 
     - logic operation:
         type: enum
+        direct_mapping: true
         vulkan: VkLogicOp
         enums:
             - clear:
@@ -324,18 +438,18 @@ protype:
               type: Bool32
               default: false
             - name: srcColorBlend
-              type: blend type
+              type: blend factor
               default: Src Color
             - name: destColorBlend
-              type: blend type
+              type: blend factor
               default: Dest Color
             - name: colorBlendOp
               type: blend operation
               default: Add
             - name: srcAlphaBlend
-              type: blend type
+              type: blend factor
             - name: destAlphaBlend
-              type: blend type
+              type: blend factor
             - name: alphaBlendOp
               type: blend operation
             - name: colorWriteMask
@@ -514,6 +628,7 @@ protype:
 
     - vertex input rate:
         type: enum
+        direct_mapping: true
         vulkan: VkVertexInputRate
         enums:
             - PerVertex:
@@ -672,48 +787,22 @@ protype:
           - name: count
             type: uint32_t
 
-    - bind table layout initializer:
+    - bind table encoder:
         type: interface
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
-            - add buffer:
+            - allocate:
                 params:
-                    - name: slot
-                      type: uint32_t
-                    - name: count
-                      type: uint32_t
-                    - name: visibility
-                      type: shader stage bit
-            - add texture:
-                params:
-                    - name: slot
-                      type: uint32_t
-                    - name: count
-                      type: uint32_t
-                    - name: visibility
-                      type: shader stage bit
-            - add sampler:
-                params:
-                    - name: slot
-                      type: uint32_t
-                    - name: visibility
-                      type: shader stage bit
-            - initialize:
-                params:
-                    - name: ppBindTableLayout
-                      type: bind table layout **
+                    - name: ppBindTable
+                      type: bind table **
                 return: result
-                    
-    - bind table layout:
-        type: interface
-        inherit: ref counted<false>
 
     - pipeline layout desc:
         type: struct
         comment: Description of Pipeline Layout (How to layout bindings)
         members:
-          - name: pShaderLayout
-            type: const bind table layout *
+          - name: pTableEncoders
+            type: const bind table encoder *
           - name: shaderLayoutCount
             type: uint32_t
 
@@ -846,7 +935,7 @@ protype:
 
     - swap chain:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
         comment: Present drawables
         functions:
             - current drawable:
@@ -869,7 +958,7 @@ protype:
 
     - function:
         type: interface
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
           - type:
               return: shader type
@@ -880,7 +969,7 @@ protype:
 
     - library:
         type: interface
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
            - make function:
                 params:
@@ -913,6 +1002,7 @@ protype:
             - array
             - pointer
             - texture
+            - sampler
             - bool
             - bool2
             - bool3
@@ -941,11 +1031,11 @@ protype:
     - variable type:
         type: interface
         comment: For shader reflection
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
             - get type:
                 return: data type
-        
+                
     - argument access:
         type: enum
         bitmask: true
@@ -953,10 +1043,28 @@ protype:
             - read only
             - write only
 
+    - argument desc:
+        type: struct
+        members:
+            - name: dataType
+              type: data type
+            - name: index
+              type: int32_t
+            - name: access
+              type: argument access
+            - name: arrayLength
+              type: int32_t
+            - name: textureDim
+              type: texture dimension
+            - name: bufferAlignment
+              type: int32_t
+            - name: stage
+              type: shader stage bit
+
     - variable:
         type: interface
         comment: For shader reflection
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
             - name:
                 return: const char *
@@ -968,6 +1076,9 @@ protype:
                 return: uint32_t
             - active:
                 return: bool
+            - get stage:
+                return: shader type
+                const: true
 
     - struct type:
         type: interface
@@ -1015,7 +1126,7 @@ protype:
 
     - pipeline reflection:
         type: interface
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
             - variable count:
                 return: uint32_t
@@ -1026,9 +1137,11 @@ protype:
                       type: uint32_t
                 return: variable *
                 const: true
-            - get stage:
-                return: shader type
-                const: true
+            - merge:
+                params:
+                    - name: pReflection
+                      type: const pipeline reflection *
+                return: result
 
     - compile option:
         type: struct
@@ -1044,9 +1157,23 @@ protype:
           - name: format
             type: shader format
 
+    - shader compiler:
+        type: interface
+        inherit: ref counted<true>
+        functions:
+            - compile:
+                params:
+                    - name: option
+                      type: compile option
+                    - name: code
+                      type: const char *
+                    - name: length
+                      type: size_t
+                return: result
+
     - factory:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
         comment: Create devices and swapchains
         functions:
             - enum device:
@@ -1070,7 +1197,7 @@ protype:
 
     - frame buffer:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
         functions:
             - compat with:
                 params:
@@ -1080,11 +1207,37 @@ protype:
 
     - render pass:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
+        functions:
+            - make frame buffer:
+                params:
+                    - name: pRenderTargetViews
+                      type: const texture view **
+                    - name: viewCount
+                      type: int32_t
+                    - name: width
+                      type: int32_t
+                    - name: height
+                      type: int32_t
+                    - name: layers
+                      type: int32_t
+                    - name: ppFramebuffer
+                      type: frame buffer **
+                return: result
+
+            - make render pipeline:
+                params:
+                    - name: pPipelineDesc
+                      type: NotNull const render pipeline desc *
+                    - name: pPipelineLayout
+                      type: NotNull const pipeline layout *
+                    - name: ppPipeline
+                      type: pipeline **
+                return: result
 
     - pipeline:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
         functions:
             - type:
                 return: pipeline type
@@ -1099,7 +1252,7 @@ protype:
 
     - pipeline library:
         type: interface
-        inherit: ref counted<false>
+        inherit: ref counted<true>
         functions:
             - store pipeline:
                 params:
@@ -1133,13 +1286,7 @@ protype:
 
     - pipeline layout:
         type: interface
-        inherit: named object<false>
-        functions:
-            - create bind table:
-                params:
-                    - name: ppBindingTable
-                      type: bind table **
-                return: result
+        inherit: named object<true>
 
     - bind table:
         type: interface
@@ -1217,7 +1364,7 @@ protype:
 
     - buffer view:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
 
     - texture:
         type: interface
@@ -1238,7 +1385,7 @@ protype:
 
     - texture view:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
 
     - drawable:
         type: interface
@@ -1263,10 +1410,11 @@ protype:
                     - name: pQueue
                       type: command queue **
                 return: result
-            - create bind table layout initializer:
+            - create shader compiler:
                 params:
-                    - name: ppBTLInitializer
-                      type: NotNull bind table layout initializer **
+                    - name: ppCompiler
+                      type: shader compiler **
+                return: result
             - create pipeline layout:
                 params:
                     - name: pPipelineLayoutDesc
@@ -1274,45 +1422,27 @@ protype:
                     - name: ppPipelineLayout
                       type: pipeline layout **
                 return: result
-            - create bind table:
-                params:
-                    - name: pBindTableLayout
-                      type: NotNull const bind table layout *
-                    - name: ppBindingTable
-                      type: bind table **
-                return: result
-            - create render pipeline:
-                params:
-                    - name: pPipelineDesc
-                      type: NotNull const render pipeline desc *
-                    - name: pPipelineLayout
-                      type: Nullable pipeline layout *
-                    - name: pRenderPass
-                      type: Nullable render pass *
-                    - name: pPipelineState
-                      type: pipeline **
-                return: result
-                
-            - create render pipeline:
-                params:
-                    - name: pPipelineDesc
-                      type: NotNull const render pipeline desc *
-                    - name: pRenderPass
-                      type: Nullable render pass *
-                    - name: pPipelineState
-                      type: pipeline **
-                    - name: ppReflection
-                      type: NotNull pipeline reflection **
-                return: result
 
-            - create compute pipeline:
+            - make bind table encoder:
                 params:
-                    - name: pComputeFunction
-                      type: NotNull function *
-                    - name: pPipelineLayout
-                      type: Nullable pipeline layout *
-                    - name: ppPipeline
+                    - name: pArgumentDescs
+                      type: NotNull const argument desc *
+                    - name: argumentCount
+                      type: int32_t
+                    - name: ppBindingTableLayout
+                      type: bind table encoder **
+                return: result
+                
+            - create render pipeline:
+                params:
+                    - name: pPipelineDesc
+                      type: NotNull const render pipeline desc *
+                    - name: pRenderPass
+                      type: Nullable render pass *
+                    - name: pPipelineState
                       type: pipeline **
+                    - name: ppReflection
+                      type: NotNull pipeline reflection **
                 return: result
                 
             - create compute pipeline:
@@ -1323,6 +1453,16 @@ protype:
                       type: pipeline **
                     - name: ppReflection
                       type: NotNull pipeline reflection **
+                return: result
+                
+            - create compute pipeline:
+                params:
+                    - name: pComputeFunction
+                      type: NotNull const function *
+                    - name: ppPipelineLayout
+                      type: NotNull const pipeline layout *
+                    - name: ppPipeline
+                      type: NotNull pipeline **
                 return: result
 
             - create pipeline library:
@@ -1334,6 +1474,7 @@ protype:
                     - name: ppPipelineLibrary
                       type: pipeline library **
                 return: result
+
             - create library:
                 params:
                     - name: compileOption
@@ -1351,13 +1492,6 @@ protype:
                     type: NotNull const render pass desc *
                   - name: ppRenderpass
                     type: render pass **
-                return: result
-            - create frame buffer:
-                params:
-                  - name: desc
-                    type: NotNull const frame buffer desc *
-                  - name: ppRenderTarget
-                    type: frame buffer **
                 return: result
             - create sampler:
                 params:
@@ -1392,7 +1526,7 @@ protype:
     #    inherit: device
     - fence:
         type: interface
-        inherit: named object<false>
+        inherit: named object<true>
         functions:
           - wait
           - reset
@@ -1531,6 +1665,8 @@ protype:
                 params:
                     - name: pIndexBuffer
                       type: buffer *
+                    - name: type
+                      type: index buffer type
             - set vertex buffer:
                 params:
                     - name: slot
@@ -1586,9 +1722,25 @@ protype:
         type: function
         comment: Create NGFX API factory
         exported: true
+        c_api: true
         params:
             - name: ppFactory
               type: factory **
             - name: debugEnabled
               type: bool
+        return: result
+    
+    - device from unity:
+        type: function
+        comment: Create Device from UnityLoad function
+        exported: true
+        c_api: true
+        macro: ENABLE_UNITY_PLUGIN
+        params:
+            - name: ppDevice
+              type: device **
+            - name: unityRenderer
+              type: UnityGfxRenderer
+            - name: pUnityDevice
+              type: void *
         return: result

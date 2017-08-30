@@ -1,7 +1,8 @@
 #ifndef __IVkRHI_h__
 #define __IVkRHI_h__
+
 #include <Core/Module.h>
-#include <Interface/IRHI.h>
+#include <Core/Interface/IRHI.h>
 
 #define DEPRECATED(...)
 

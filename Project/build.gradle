@@ -12,13 +12,13 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_PLATFORM=android-23',
+                arguments '-DANDROID_PLATFORM=android-24',
                 		  '-DCMAKE_BUILD_TYPE=Debug',
                           '-DANDROID_TOOLCHAIN=clang',
                           '-DANDROID_STL=gnustl_shared',
                           '-DANDROID_CPP_FEATURES=rtti'
                 // explicitly build libs
-                targets 'Core','ShaderCompiler','RHI_Vulkan','Render'
+                targets 'Kaleido3D.Core','ShaderCompiler','RHI_Vulkan'
             }
         }
 
@@ -51,7 +51,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path '../Source/CMakeLists.txt'
+            path '../CMakeLists.txt'
         }
     }
 }

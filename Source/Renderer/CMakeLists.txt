@@ -1,15 +1,15 @@
 include_directories(
-../.. ../../../Include
-${Kaleido3D_ROOT_DIR}/Source/RHI/D3D12
-${DXSDK_INCLUDE_DIR}
-${V8_INCLUDE_DIR}
+${Kaleido3D_ROOT_DIR}/Source
+${Kaleido3D_ROOT_DIR}/Include
+${Kaleido3D_ROOT_DIR}/Source/Renderer
+${Kaleido3D_ROOT_DIR}/Source/Renderer/Public
 )
 
 set(RENDER_SRCS
-Render.h
-Render.cpp
-MeshRender.cpp
-RenderContext.cpp
+Public/Renderer.h
+Private/Render.cpp
+Private/MeshRender.cpp
+Private/RenderContext.cpp
 )
 
 if(BUILD_SHARED)
@@ -21,20 +21,22 @@ source_group(Render FILES ${RENDER_SRCS})
 set(RENDER_DEPLIB Kaleido3D.Core)
 
 if(HAS_FREETYPE)
-	set(FTRENDER_SRC FontRenderer.h FontRenderer.cpp)
+	set(FTRENDER_SRC Private/FontRenderer.h Private/FontRenderer.cpp)
 	source_group(Font FILES ${FTRENDER_SRC})
 	set(RENDER_SRCS ${RENDER_SRCS} ${FTRENDER_SRC})
-	set(RENDER_DEPLIB ${RENDER_DEPLIB} ${FREETYPE2_LIBRARY})
+	set(RENDER_DEPLIB ${RENDER_DEPLIB} ${FREETYPE_LIBRARIES})
 endif()
 
-k3d_add_lib(Render SRCS ${RENDER_SRCS} LIBS ${RENDER_DEPLIB} FOLDER "Runtime")
+k3d_add_lib(Renderer 
+    SRCS ${RENDER_SRCS} 
+    LIBS ${RENDER_DEPLIB} 
+    FOLDER "Runtime"
+    PCH "Renderer.h"
+    PCH_SRC "${Kaleido3D_ROOT_DIR}/Source/Renderer/Private/RenderContext.cpp"
+    PCH_INCLUDE "${Kaleido3D_ROOT_DIR}/Source/Renderer/Public"
+)
 
-if(MACOS AND BUILD_SHARED)
-	add_custom_command(TARGET Render POST_BUILD COMMAND
-		${CMAKE_INSTALL_NAME_TOOL} -id "@loader_path/../Frameworks/libRender.dylib" $<TARGET_FILE:Render>)
-endif()
-
-install(TARGETS Kaleido3D.Render 
+install(TARGETS Kaleido3D.Renderer
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin)

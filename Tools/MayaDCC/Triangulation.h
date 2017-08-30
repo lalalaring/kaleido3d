@@ -1,6 +1,6 @@
 #pragma once
 #include "MayaCommon.h"
-#include <Core/MeshData.h>
+#include <Engine/Assets/MeshData.h>
 #include <vector>
 
 int Triangulation(

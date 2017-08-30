@@ -4,7 +4,7 @@
 
 namespace Dispatch 
 {
-	WorkItem::WorkItem()
+	WorkItem::WorkItem() K3D_NOEXCEPT
 		: m_Prev(nullptr)
 		, m_Next(nullptr)
 		, m_OwningQueue(nullptr)

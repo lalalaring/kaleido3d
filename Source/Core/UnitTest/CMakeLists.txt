@@ -8,47 +8,54 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_unittest(
-	Core-UnitTest-1.Os
-	UTCore.Os.cpp
+macro(add_core_unittest TARGET_NAME)
+    if(ANDROID)
+        add_android_app(${TARGET_NAME}
+            SRCS ${ARGN} ${Kaleido3D_SOURCE_DIR}/Source/Platform/Android/jni/RendererView.cpp ${Kaleido3D_SOURCE_DIR}/Source/Platform/Android/jni/RendererView_JNI.cpp
+            LIBS ${PLATFORM_LIBS} Kaleido3D.Core)
+    elseif(WIN32)
+        add_executable(${TARGET_NAME} ${ARGN} ${Kaleido3D_SOURCE_DIR}/Source/Platform/Microsoft/Win32/win32icon.rc)
+        target_link_libraries(${TARGET_NAME} ${PLATFORM_LIBS} Kaleido3D.Core)
+        set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+    elseif(MACOS)
+        add_mac_app(${TARGET_NAME} 
+            SRCS ${ARGN} 
+            LIBS ${PLATFORM_LIBS} Kaleido3D.Core
+            PLUGINS RHI_Metal KawaLog ShaderCompiler)
+    elseif(IOS)
+        add_ios_app(${TARGET_NAME}
+            SRCS ${ARGN} "${Kaleido3D_SOURCE_DIR}/Source/Platform/Apple/iOS/App.mm"
+            LIBS ${PLATFORM_LIBS} 
+            PDN ${TARGET_NAME}
+            OS 8.0
+            LDPATH "@executable_path")
+    elseif(UNIX)
+        add_executable(${TARGET_NAME} ${ARGN})
+        target_link_libraries(${TARGET_NAME} ${PLATFORM_LIBS} )
+    else()
+        add_executable(${TARGET_NAME} ${ARGN})
+    endif()
+    set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Unit Test/Core")
+endmacro()
+
+add_core_unittest(
+    GTestCore
+    GTestCore.cpp
 )
 
-add_unittest(
-	Core-UnitTest-2.Bundle
-	UTCore.Bundle.cpp
+target_link_libraries(GTestCore ${GTEST_LIBRARIES})
+
+add_core_unittest(
+    GSkServer
+    GSocketServer.cpp
 )
 
-add_unittest(
-	Core-UnitTest-3.WebSocket
-	UTCore.WebSocket.cpp
+add_core_unittest(
+    GSkClient
+    GSocketClient.cpp
 )
 
-add_unittest(
-	Core-UnitTest-4.SharedPtr
-	UTKTL.SharedPtr.cpp
-)
-
-add_unittest(
-	Core-UnitTest-5.DynArray
-	UTKTL.DynArray.cpp
-)
-
-add_unittest(
-	Core-UnitTest-6.String
-	UTCore.String.cpp
-)
-
-add_unittest(
-	Core-UnitTest-7.ShaderCompiler
-	UTTools.ShaderCompiler.cpp
-)
-
-add_unittest(
-	Core-UnitTest-8.UTFontLoader
-	UTFontLoader.cpp
-)
-
-add_unittest(
-	Core-UnitTest-9.Math
-	UTCore.Math.cpp
+add_core_unittest(
+    GTestMap
+    GTestMapContainer.cpp
 )

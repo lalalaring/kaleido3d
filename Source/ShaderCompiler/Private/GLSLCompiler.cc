@@ -3,7 +3,7 @@
 #else
 #include <shaderc/shaderc.hpp>
 #endif
-#include "Kaleido3D.h"
+#include <Core/Kaleido3D.h>
 #include <Core/LogUtil.h>
 #include <algorithm>
 

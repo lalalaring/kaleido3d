@@ -1,34 +1,9 @@
-message("ThirdParty includes vulkan, rapidjson, glslang, spirv2cross, freetype2. ")
-set(GIT_THIRDPARTY_REPO "https://github.com/Tomicyo/kaleido3d_dep_prebuilt")
-if(WIN32)
-    if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
-	   set(ThirdParty_PREBUILT_DIR ${K3D_THIRD_PARTY}/Win64/${CMAKE_BUILD_TYPE})
-    else()
-       set(ThirdParty_PREBUILT_DIR ${K3D_THIRD_PARTY}/Win32/${CMAKE_BUILD_TYPE})
-    endif()
-    if(NOT (EXISTS ${ThirdParty_PREBUILT_DIR}))
-        message(AUTHOR_WARNING "cloning ${ThirdParty_PREBUILT_DIR} from ${GIT_THIRDPARTY_REPO}")
-        execute_process(COMMAND git clone ${GIT_THIRDPARTY_REPO} -b win64_${CMAKE_BUILD_TYPE} ${ThirdParty_PREBUILT_DIR})
-    endif()
-elseif(ANDROID)
-	set(ThirdParty_PREBUILT_DIR ${K3D_THIRD_PARTY}/Android/${ANDROID_ABI}/${ANDROID_STL}/${CMAKE_BUILD_TYPE})
-    if(NOT (EXISTS ${ThirdParty_PREBUILT_DIR}))
-        message(AUTHOR_WARNING "cloning ${ThirdParty_PREBUILT_DIR} from ${GIT_THIRDPARTY_REPO}")
-        execute_process(COMMAND git clone ${GIT_THIRDPARTY_REPO} -b android_${ANDROID_ABI}_${ANDROID_STL}_${CMAKE_BUILD_TYPE} ${ThirdParty_PREBUILT_DIR})
-    endif()
-elseif(MACOS)
-	set(ThirdParty_PREBUILT_DIR ${K3D_THIRD_PARTY}/MacOS/${CMAKE_BUILD_TYPE})
-    if(NOT (EXISTS ${ThirdParty_PREBUILT_DIR}))
-        message(AUTHOR_WARNING "cloning ${ThirdParty_PREBUILT_DIR} from ${GIT_THIRDPARTY_REPO}")
-        execute_process(COMMAND git clone ${GIT_THIRDPARTY_REPO} -b macos_${CMAKE_BUILD_TYPE} ${ThirdParty_PREBUILT_DIR})
-    endif()
-elseif(IOS)
-	set(ThirdParty_PREBUILT_DIR ${K3D_THIRD_PARTY}/iOS/${CMAKE_BUILD_TYPE})
-    if(NOT (EXISTS ${ThirdParty_PREBUILT_DIR}))
-        message(AUTHOR_WARNING "cloning ${ThirdParty_PREBUILT_DIR} from ${GIT_THIRDPARTY_REPO}")
-        execute_process(COMMAND git clone ${GIT_THIRDPARTY_REPO} -b ios_${CMAKE_BUILD_TYPE} ${ThirdParty_PREBUILT_DIR})
-    endif()
-endif()
+set(ThirdParty_PREBUILT_DIR ${Kaleido3D_SOURCE_DIR}/Source/Window_DEPS)
+execute_process(COMMAND 
+${PYTHON_EXECUTABLE} 
+${Kaleido3D_SOURCE_DIR}/Tools/Build/Windows/get_dependencies.py
+${ThirdParty_PREBUILT_DIR}
+)
 message(STATUS "** 3rd party ** ${ThirdParty_PREBUILT_DIR}")
 
 unset(THIRDPARTY_FOUND CACHE)
@@ -93,6 +68,12 @@ find_library(VULKAN_LIB vulkan
 	PATH_SUFFIXES platforms/android-24/arch-${ANDROID_SYSROOT_ABI}/usr/lib
 	PATHS $ENV{ANDROID_NDK})
 message(STATUS "** Vulkan Lib \(Android\) ** ${VULKAN_LIB}")
+elseif(UNIX)
+    find_library(VULKAN_LIB libvulkan.so.1
+            PATHS
+            /usr/lib/x86_64-linux-gnu
+            /usr/lib/x86-linux-gnu)
+    message(STATUS "** Vulkan \(Linux\) ** ${VULKAN_LIB}")
 endif()
 
 find_path(RAPIDJSON_INCLUDE_DIR
@@ -163,7 +144,7 @@ if(FREETYPE2_LIBRARY)
     endif ()
 endif()
 
-message("GLSLang = ${GLSLANG_INCLUDE_DIR}")
+message(STATUS "GLSLang = ${GLSLANG_INCLUDE_DIR}")
 
 if(WIN32)
 	find_path(DXSDK_INCLUDE_DIR
@@ -176,13 +157,32 @@ if(WIN32)
         PATH_SUFFIES include
         PATHS ${ThirdParty_PREBUILT_DIR}
     )
-    message("STEAMSDK = ${STEAMSDK_INCLUDE_DIR}")
+    message(STATUS "STEAMSDK = ${STEAMSDK_INCLUDE_DIR}")
     find_library(STEAMSDK_LIBRARY
         NAMES steam_api64 steam_api
         PATH_SUFFIXES lib
         PATHS
         ${ThirdParty_PREBUILT_DIR}
     )
+    find_path(V8_INCLUDE_DIR
+        v8.h
+        PATH_SUFFIXES include
+	    PATHS ${ThirdParty_PREBUILT_DIR}
+    )
+    message(STATUS "V8_INCLUDE_DIR = ${V8_INCLUDE_DIR}")
+    if(V8_INCLUDE_DIR)
+        set(V8_VERSION 0)
+        file(READ "${V8_INCLUDE_DIR}/v8-version.h" _V8_VERSION_CONTENTS)
+        string(REGEX REPLACE ".*#define V8_MAJOR_VERSION ([0-9]+).*" "\\1" V8_MAJOR_VERSION "${_V8_VERSION_CONTENTS}")
+        set(V8_MAJOR_VERSION "${V8_MAJOR_VERSION}")
+        string(REGEX REPLACE ".*#define V8_MINOR_VERSION ([0-9]+).*" "\\1" V8_MINOR_VERSION "${_V8_VERSION_CONTENTS}")
+        set(V8_MINOR_VERSION "${V8_MINOR_VERSION}")
+        string(REGEX REPLACE ".*#define V8_BUILD_NUMBER ([0-9]+).*" "\\1" V8_BUILD_NUMBER "${_V8_VERSION_CONTENTS}")
+        set(V8_BUILD_NUMBER "${V8_BUILD_NUMBER}")
+        set(V8_VERSION "${V8_MAJOR_VERSION}.${V8_MINOR_VERSION}.${V8_BUILD_NUMBER}")
+        message(STATUS "V8_VERSION = ${V8_VERSION}")
+        set(V8_LIBRARIES icui18n.dll.lib icuuc.dll.lib v8_libbase.dll.lib v8_libplatform.dll.lib v8.dll.lib)
+    endif()
 endif()
 
 mark_as_advanced(VULKANSDK_INCLUDE_DIR)
@@ -190,6 +190,7 @@ mark_as_advanced(RAPIDJSON_INCLUDE_DIR)
 mark_as_advanced(GLSLANG_INCLUDE_DIR)
 mark_as_advanced(SPIRV2CROSS_INCLUDE_DIR)
 mark_as_advanced(FREETYPE2_INCLUDE_DIR)
+mark_as_advanced(V8_INCLUDE_DIR)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 
@@ -212,6 +213,7 @@ find_package_handle_standard_args(ThirdParty DEFAULT_MSG
     SPIRV2CROSS_INCLUDE_DIR
     FREETYPE2_INCLUDE_DIR
     STEAMSDK_INCLUDE_DIR
+    V8_INCLUDE_DIR
 )
 mark_as_advanced(
     VULKANSDK_INCLUDE_DIR
@@ -220,6 +222,7 @@ mark_as_advanced(
     SPIRV2CROSS_INCLUDE_DIR
     FREETYPE2_INCLUDE_DIR
     STEAMSDK_INCLUDE_DIR
+    V8_INCLUDE_DIR
 )
 elseif(IOS OR MACOS)
 find_package_handle_standard_args(ThirdParty DEFAULT_MSG

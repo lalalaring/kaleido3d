@@ -1,6 +1,7 @@
 #ifndef __VkRHI_h__
 #define __VkRHI_h__
 #pragma once
+#include "VkCommon.h"
 #include <Core/Os.h>
 #include <list>
 #include <tuple>
@@ -1168,7 +1169,7 @@ public:
 private:
   friend class CommandContext;
 
-  VkClearValue m_ClearValues[2] = { {}, { 1.0f, 0 } };
+  VkClearValue m_ClearValues[2]/* = { {}, { 1.0f, 0 } }*/;
   
   VkFramebuffer m_Framebuffer;
   VkRenderPass m_Renderpass;
@@ -1264,6 +1265,8 @@ protected:
   NGFXSwapChainRef m_PendingSwapChain = nullptr;
 };
 
+class ComputePipelineStateImpl;
+
 template<typename CmdEncoderSubT>
 class CommandEncoder : public CmdEncoderSubT
 {
@@ -1275,23 +1278,7 @@ public:
   }
 
   void SetPipelineState(uint32 HashCode,
-                        NGFXPipelineStateRef const& pPipeline) override
-  {
-    K3D_ASSERT(pPipeline);
-    if (pPipeline->GetType() == NGFX_PIPELINE_Compute) {
-      const ComputePipelineStateImpl* computePso =
-        static_cast<const ComputePipelineStateImpl*>(pPipeline);
-      vkCmdBindPipeline(m_MasterCmd->NativeHandle(),
-                        VK_PIPELINE_BIND_POINT_COMPUTE,
-                        computePso->NativeHandle());
-    } else {
-      const RenderPipelineStateImpl* gfxPso =
-        static_cast<const RenderPipelineStateImpl*>(pPipeline);
-      vkCmdBindPipeline(m_MasterCmd->NativeHandle(),
-                        VK_PIPELINE_BIND_POINT_GRAPHICS,
-                        gfxPso->NativeHandle());
-    }
-  }
+                        NGFXPipelineStateRef const& pPipeline) override;
 
   void SetBindingGroup(NGFXBindingGroupRef const& pBindingGroup) override
   {
@@ -1528,15 +1515,7 @@ public:
 
 protected:
   VkPipelineShaderStageCreateInfo ConvertStageInfoFromShaderBundle(
-    NGFXShaderBundle const& Bundle)
-  {
-    return { VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-             nullptr,
-             0,
-             g_ShaderType[Bundle.Desc.Stage],
-             m_Device->CreateShaderModule(Bundle),
-             Bundle.Desc.EntryFunction.CStr() };
-  }
+    NGFXShaderBundle const& Bundle);
 
   DeviceRef m_Device;
 
@@ -1613,7 +1592,7 @@ public:
   void Rebuild() override;
 
   friend class CommandContext;
-
+  friend class DeviceImpl;
 private:
   VkComputePipelineCreateInfo m_ComputeCreateInfo;
   PipelineLayoutImpl* m_PipelineLayout;
@@ -1714,6 +1693,26 @@ private:
 
   VkSemaphore m_Semaphore;
 };
+
+
+template<typename CmdEncoderSubT>
+void CommandEncoder<CmdEncoderSubT>::SetPipelineState(uint32 HashCode, NGFXPipelineStateRef const &pPipeline)
+{
+  K3D_ASSERT(pPipeline);
+  if (pPipeline->GetType() == NGFX_PIPELINE_Compute) {
+    const ComputePipelineStateImpl* computePso =
+            static_cast<const ComputePipelineStateImpl*>(pPipeline);
+    vkCmdBindPipeline(m_MasterCmd->NativeHandle(),
+                      VK_PIPELINE_BIND_POINT_COMPUTE,
+                      computePso->NativeHandle());
+  } else {
+    const RenderPipelineStateImpl* gfxPso =
+            static_cast<const RenderPipelineStateImpl*>(pPipeline);
+    vkCmdBindPipeline(m_MasterCmd->NativeHandle(),
+                      VK_PIPELINE_BIND_POINT_GRAPHICS,
+                      gfxPso->NativeHandle());
+  }
+}
 
 K3D_VK_END
 

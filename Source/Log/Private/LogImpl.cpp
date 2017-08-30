@@ -1,5 +1,4 @@
-#include "Kaleido3D.h"
-
+#include <Core/Kaleido3D.h>
 #include <queue>
 #include <unordered_map>
 #include <mutex>
@@ -35,8 +34,8 @@ namespace k3d
 	public:
 		FileLogger()
 		{
-			kString name = GetEnv()->GetEnvValue(Environment::ENV_KEY_LOG_DIR) + KT("/") + GetEnv()->GetEnvValue(Environment::ENV_KEY_APP_NAME) + KT(".log");
-			m_LogFile.Open(name.c_str(), IOWrite);
+			String name = Os::Path::Join(GetEnv()->GetLogDir(), GetEnv()->GetInstanceName() + ".log");
+			m_LogFile.Open(name.CStr(), IOWrite);
 			m_Thread = new Os::Thread([this]()->void {
 				while (true)
 				{
@@ -84,12 +83,12 @@ namespace k3d
 	};
 
 
-	class WebSocketLogger : public ILogger, public net::WebSocket
+	class WebSocketLogger : public ILogger, public Net::WebSocket
 	{
 	public:
 		static const uint32 BUF_LEN = 8192;
 
-		WebSocketLogger() : net::WebSocket()
+		WebSocketLogger() : Net::WebSocket()
 		{
 			m_Thread = new Os::Thread([this]()->void {
 				this->BindAndListen();

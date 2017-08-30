@@ -12,7 +12,7 @@ namespace k3d
 	/// \brief The k3dMaterialManager class manages material loading, finding
 	///
 	class MaterialManager : public Singleton<MaterialManager> {
-		typedef std::map<std::string, std::shared_ptr<Material> >  MaterialMap;
+		typedef std::map<std::string, SharedPtr<Material> >  MaterialMap;
 	public:
 		MaterialManager();
 		~MaterialManager();
@@ -28,7 +28,7 @@ namespace k3d
 		/// \param name
 		/// \return
 		///
-		std::shared_ptr<Material>
+		SharedPtr<Material>
 			FindMaterialByName(const char * name);
 
 		///
@@ -36,7 +36,7 @@ namespace k3d
 		/// \param name
 		/// \return
 		///
-		std::shared_ptr<Material>
+		SharedPtr<Material>
 			FindMaterialByName(const std::string & name);
 
 	private:

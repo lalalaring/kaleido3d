@@ -1,16 +1,15 @@
-# Core
+This directory includes:
 
-includes :
+* **Project config headers** (`Config`) :
 
-* **App Framework and Window management**
-* **Dynamic and Static Plugin-Based Module Definition and Loader** (Module.h)
-* Basic **CROSS-OS** wrapper:
+  defines COMPILER, PLATFORM, INTRINSICS
 
-  File, Threading, Socket, WebSocket
-  
-* **Memory Allocator**
-* Engine internal **Asset Data** representation, **AssetBundle packager & loader**
+* **Kaleido3D template library** (`KTL`) :
 
-  CameraData, MeshData, ImageData, etc
+  implementation of **Allocator**, **Dynamic Array**, **SharedPtr**, etc. (Why don't use STL? Coz it cannot be compiled across Compilers/Platforms, if we only provide headers and libraries.)
 
-* Input processor
+* **Math library** (`Math`) :
+
+  vector and matrix operations with **SIMD(SSE, NEON) acceleration**.
+
+* Interfaces

@@ -1,4 +1,5 @@
 #pragma once
+#include <KTL/String.hpp>
 
 namespace k3d
 {
@@ -21,7 +22,7 @@ namespace k3d
 		virtual ~ShaderParameter();
 
 		void SetName(const char * paramName);
-		std::string & GetName();
+		String & GetName();
 
 		virtual const ShaderParamType GetParamType() = 0;
 
@@ -33,8 +34,8 @@ namespace k3d
 
 	protected:
 
-		std::string m_ParameterName;
-		uint32		m_ValueID[4];
+        String m_ParameterName;
+		uint32 m_ValueID[4];
 	};
 
 	class ShaderParameterManager

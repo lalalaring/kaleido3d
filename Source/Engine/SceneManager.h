@@ -1,5 +1,8 @@
 #pragma once
 #include <KTL/Singleton.hpp>
+#include <KTL/HashMap.hpp>
+#include <KTL/SharedPtr.hpp>
+#include <KTL/DynArray.hpp>
 #include "SceneObject.h"
 
 namespace k3d 
@@ -13,7 +16,7 @@ namespace k3d
 
 		/// \brief VMarkMap
 		/// visible marks map
-		typedef std::unordered_map<uint32, std::shared_ptr<std::vector<char> > > VMarkMap;
+		typedef HashMap<uint32, SharedPtr<DynArray<char> > > VMarkMap;
 
 		SceneManager();
 		~SceneManager();
@@ -35,5 +38,5 @@ namespace k3d
 
 	};
 
-	typedef std::shared_ptr<SceneManager> SharedSceneManagerPtr;
+	typedef SharedPtr<SceneManager> SharedSceneManagerPtr;
 }

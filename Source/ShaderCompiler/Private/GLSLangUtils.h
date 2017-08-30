@@ -1,5 +1,5 @@
 #pragma once
-#include <Interface/ICrossShaderCompiler.h>
+#include <Core/Interface/ICrossShaderCompiler.h>
 #include <SPIRV/GlslangToSpv.h>
 
 void sInitializeGlSlang();

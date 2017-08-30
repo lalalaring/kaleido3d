@@ -1,5 +1,4 @@
-#include "Kaleido3D.h"
-#include <Core/Message.h>
+#include "CoreMinimal.h"
 #include <queue>
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/CAMetalLayer.h>
@@ -34,11 +33,11 @@ namespace k3d
         class OSXWindow : public IWindow
         {
         public:
-            OSXWindow(const kchar *windowName, int width, int height);
+            OSXWindow(const char *windowName, int width, int height);
             ~OSXWindow();
 
             int     Init();
-            void    SetWindowCaption(const kchar * name) override;
+            void    SetWindowCaption(const char * name) override;
             void	Show(WindowMode mode) override;
             void	Resize(int width, int height) override;
             void	Move(int x, int y) override;
@@ -61,7 +60,7 @@ namespace k3d
             NSWindow*       m_Window;
         };
 
-        OSXWindow::OSXWindow(const kchar *windowName, int width, int height)
+        OSXWindow::OSXWindow(const char *windowName, int width, int height)
         : m_Window(nil)
         {
             Init();
@@ -120,7 +119,7 @@ namespace k3d
             
         }
         
-        void OSXWindow::SetWindowCaption(const kchar *name)
+        void OSXWindow::SetWindowCaption(const char *name)
         {
             
         }
@@ -147,9 +146,9 @@ namespace k3d
 
     }
 
-    IWindow::Ptr MakePlatformWindow(const kchar *windowName, int width, int height)
+    IWindow::Ptr MakePlatformWindow(const char *windowName, int width, int height)
     {
-        return std::make_shared<WindowImpl::OSXWindow>(windowName, width, height);
+        return MakeShared<WindowImpl::OSXWindow>(windowName, width, height);
     }
 }
 

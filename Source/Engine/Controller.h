@@ -1,5 +1,8 @@
 #pragma once
 #include "Camera.h"
+#include <KTL/String.hpp>
+#include <KTL/DynArray.hpp>
+#include <KTL/SharedPtr.hpp>
 //#include <dinput.h>
 //#pragma comment(lib, "dinput8.lib")
 
@@ -22,14 +25,14 @@ namespace k3d {
 		/// \brief Set the camera controlled by controller
 		/// \param[in, refCount] camptr
 		///
-		virtual void SetCamera(std::shared_ptr<Camera> & camptr);
+		virtual void SetCamera(SharedPtr<Camera> & camptr);
 
 		//virtual void HandleMessage(SharedAppMsgHandlerPtr  msg);
 
 	protected:
 
-		std::shared_ptr<Camera> m_CameraPtr;
+        SharedPtr<Camera> m_CameraPtr;
 	};
 
-	typedef std::shared_ptr<Controller> SharedControllerPtr;
+	typedef SharedPtr<Controller> SharedControllerPtr;
 }

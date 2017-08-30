@@ -1,10 +1,13 @@
 // Copyright (c) 2008, Casey Duncan (casey dot duncan at gmail dot com)
-#include "Kaleido3D.h"
+#include "CoreMinimal.h"
 #include "Noise.h"
+#include <math.h>
 
 #define lerp(t, a, b) ((a) + (t) * ((b) - (a)))
 #define fastfloor(n) (int)(n) - (((n) < 0.0f) & ((n) != (int)(n)))
-
+#if K3DCOMPILER_MSVC
+#pragma warning(disable : 4244)
+#endif
 // Fast sine/cosine functions from
 // http://devmaster.net/forums/topic/4648-fast-and-accurate-sinecosine/page__st__80
 // Note the input to these functions is not radians
@@ -245,7 +248,7 @@ float PerlinNoise1D(float X, int Octaves, float Persistence, float Lacunarity, i
 }
 
 
-float PerlinNoise2D(kMath::tVectorN<float, 2> const& Vector, int Octaves, float Persistence, float Lacunarity, kMath::tVectorN<int, 2> const& Repeat, int Base)
+float PerlinNoise2D(k3d::math::TVector<float, 2> const& Vector, int Octaves, float Persistence, float Lacunarity, k3d::math::TVector<float, 2> const& Repeat, int Base)
 {
   if (Octaves == 1) {
     return Perlin::noise2(Vector.X(), Vector.Y(), Repeat.X(), Repeat.Y(), Base);
@@ -271,7 +274,7 @@ float PerlinNoise2D(kMath::tVectorN<float, 2> const& Vector, int Octaves, float 
   }
 }
 
-float PerlinNoise3D(kMath::tVectorN<float, 3> const& V, int Octaves, float Persistence, float Lacunarity, kMath::tVectorN<int, 3> const& Repeat, int Base)
+float PerlinNoise3D(k3d::math::TVector<float, 3> const& V, int Octaves, float Persistence, float Lacunarity, k3d::math::TVector<float, 3> const& Repeat, int Base)
 {
   if (Octaves == 1) {
     return Perlin::noise3(V[0], V[1], V[2], Repeat.x, Repeat.y, Repeat.z, Base);
@@ -296,7 +299,3 @@ float PerlinNoise3D(kMath::tVectorN<float, 3> const& V, int Octaves, float Persi
     return -1.f;
   }
 }
-
-NS_MATHLIB_BEGIN
-
-NS_MATHLIB_END

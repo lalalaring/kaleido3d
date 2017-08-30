@@ -4,11 +4,11 @@
 
 #include "MayaCommon.h"
 
-#include <Interface/IIODevice.h>
-#include <KTL/Archive.hpp>
-#include <Core/MeshData.h>
-#include <Core/CameraData.h>
-#include <Core/Bundle.h>
+#include <Core/Interface/IIODevice.h>
+#include <Core/KTL/Archive.hpp>
+#include <Engine/Assets/MeshData.h>
+#include <Engine/Assets/CameraData.h>
+#include <Engine/Assets/Bundle.h>
 #include <vector>
 
 class DCTranslator : public MPxFileTranslator

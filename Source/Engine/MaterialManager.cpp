@@ -18,13 +18,13 @@ namespace k3d
 
 	}
 
-	std::shared_ptr<Material> MaterialManager::FindMaterialByName(const char *name)
+	SharedPtr<Material> MaterialManager::FindMaterialByName(const char *name)
 	{
 		std::string matName(name);
 		return FindMaterialByName(matName);
 	}
 
-	std::shared_ptr<Material> MaterialManager::FindMaterialByName(const std::string & name)
+	SharedPtr<Material> MaterialManager::FindMaterialByName(const std::string & name)
 	{
 		MaterialMap::const_iterator iter = m_Materials.find(name);
 		if (iter != m_Materials.end()) {

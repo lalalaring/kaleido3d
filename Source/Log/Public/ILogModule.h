@@ -2,7 +2,7 @@
 #define __ILogModule_h__
 
 #include <Core/Module.h>
-#include <Interface/ILog.h>
+#include <Core/Interface/ILog.h>
 
 namespace k3d
 {

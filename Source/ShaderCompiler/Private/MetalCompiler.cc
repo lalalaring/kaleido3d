@@ -179,7 +179,7 @@ namespace k3d
         MD5 md5(source);
         auto name = md5.toString();
         auto intermediate = string(".") + METAL_COMPILE_TMP;
-        Os::MakeDir(intermediate.c_str());
+        Os::Path::MakeDir(intermediate.c_str());
         auto tmpSh = intermediate + name + ".metal";
         auto tmpAr = intermediate + name + ".air";
         auto tmpLib = intermediate + name + ".metallib";
