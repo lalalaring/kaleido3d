@@ -91,3 +91,11 @@ xcshareddata
 /Tools/RHIGenerator/generator/*.pyc
 /.vs
 /.build
+/Document/book/*.toc
+/Document/book/*.aux
+/Document/book/*.bcf
+/Document/book/*.log
+/Document/book/*.pdf
+/Document/book/*.ptc
+/Document/book/*.xml
+/Document/book/*.gz
